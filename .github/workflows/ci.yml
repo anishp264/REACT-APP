@@ -13,3 +13,8 @@ jobs:
         with:
           node-version: "18.x"
       - run: npm ci 
+      - run: npm run format:check
+      - run: npm test -- --coverage 
+        #need to set env to CI to prevent any terminals be shown while running test and coverage
+        env:
+          CI: true
