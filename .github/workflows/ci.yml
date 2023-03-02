@@ -2,6 +2,9 @@ name: CI
 on:
   pull_request:
     branches: [develop]
+  #push event triggered when a feature branch is merged with develop
+  push:
+    branches: [develop]
 
 jobs:
   build:
@@ -12,9 +15,28 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "18.x"
+          #running npm ci instead of npm install since this is run in a CI env
       - run: npm ci
       - run: npm run format:check
       - run: npm test -- --coverage
         #need to set env to CI to prevent any terminals be shown while running test and coverage
         env:
           CI: true
+      - name: Build Project
+        if: github.event_name == 'push'
+        run: npm run build
+      - name: Deploy to Staging
+        if: github.event_name == 'push'
+        #using npx we can install and use surge in one line
+        #otherwise, need to install surge => npm install -g surge
+        #then, run => surge
+        #need to provide project and domain, project will be in the build folder
+        #domain, use => surge list => to get domain
+        run: npx surge --project ./build --domain https://mindless-street.surge.sh/
+        #need to authenticate surge usage
+        env:
+          #use => surge whoami => to get email
+          #repo=>settings=>secrets and variables => codespaces => secrets
+          SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
+          #use => surge token => to get token
+          SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
