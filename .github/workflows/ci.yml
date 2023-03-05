@@ -10,14 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use NodeJS
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           #running npm ci instead of npm install since this is run in a CI env
       - run: npm ci
-      - run: npm audit fix --force
       - run: npm run format:check
       - run: npm test -- --coverage
         #need to set env to CI to prevent any terminals be shown while running test and coverage
