@@ -32,11 +32,11 @@ jobs:
         #then, run => surge
         #need to provide project and domain, project will be in the build folder
         #domain, use => surge list => to get domain
-        run: npx surge --project ./build --domain https://mindless-street.surge.sh/
+        run: npx surge --project ./build --domain mindless-street.surge.sh
         #need to authenticate surge usage
         env:
           #use => surge whoami => to get email
           #repo=>settings=>secrets and variables => codespaces => secrets
-          SURGE_LOGIN: ${{secrets.SURGE_LOGIN}}
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
           #use => surge token => to get token
-          SURGE_TOKEN: ${{secrets.SURGE_TOKEN}}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
