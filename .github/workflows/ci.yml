@@ -14,32 +14,30 @@ jobs:
       - name: Use NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-          #running npm ci instead of npm install since this is run in a CI env
-      - run: npm ci
-      - run: npm install -g npm
-      - run: node -v
-      - run: npm -v
-      - run: npm run format:check
-      - run: npm test -- --coverage
+          node-version: 16.x
+      # Install Dependencies
+      - name: Install Dependencies
+        run: npm install
+      # Checking installed node versions
+      - name: Check node versions
+        run: node -v
+      - name: Check npm version
+        run: npm -v
+      # Performing automated tests and code formatting
+      - name: Perform Code format checks
+        run: npm run format:check
+      - name: Perform Automated tests
+        run: npm test -- --coverage
         #need to set env to CI to prevent any terminals be shown while running test and coverage
         env:
           CI: true
+      # Build the project
       - name: Build Project
         if: github.event_name == 'push'
         run: npm run build
-      - name: Deploy to Staging
+      - name: Install Surge
         if: github.event_name == 'push'
-        #using npx we can install and use surge in one line
-        #otherwise, need to install surge => npm install -g surge
-        #then, run => surge
-        #need to provide project and domain, project will be in the build folder
-        #domain, use => surge list => to get domain
-        run: npx surge --project ./build --domain https://mindless-street.surge.sh/
-        #need to authenticate surge usage
-        env:
-          #use => surge whoami => to get email
-          #repo=>settings=>secrets and variables => codespaces => secrets
-          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-          #use => surge token => to get token
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        run: npm install --global surge
+      - name: Deploy to Surge
+        if: github.event_name == 'push'
+        run: surge --project ./build --domain https://mindless-street.surge.sh/ --token ${{ secrets.SURGE_TOKEN }}
