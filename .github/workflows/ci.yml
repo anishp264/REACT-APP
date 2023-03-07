@@ -23,6 +23,8 @@ jobs:
         run: node -v
       - name: Check npm version
         run: npm -v
+      - name: check token
+        run: ${{ secrets.SURGE_TOKEN }}
       # Performing automated tests and code formatting
       - name: Perform Code format checks
         run: npm run format:check
@@ -40,4 +42,4 @@ jobs:
         run: npm install --global surge
       - name: Deploy to Surge
         if: github.event_name == 'push'
-        run: surge ./build https://mindless-street.surge.sh/ --token ${{ secrets.SURGE_TOKEN }}
+        run: surge ./build https://mindless-street.surge.sh/ --token 1678041085579
