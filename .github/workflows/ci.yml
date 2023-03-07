@@ -17,6 +17,9 @@ jobs:
           node-version: 16
           #running npm ci instead of npm install since this is run in a CI env
       - run: npm ci
+      - run: npm install -g npm
+      - run: node -v
+      - run: npm -v
       - run: npm run format:check
       - run: npm test -- --coverage
         #need to set env to CI to prevent any terminals be shown while running test and coverage
@@ -32,7 +35,7 @@ jobs:
         #then, run => surge
         #need to provide project and domain, project will be in the build folder
         #domain, use => surge list => to get domain
-        run: npx surge --project ./build --domain mindless-street.surge.sh
+        run: npx surge --project ./build --domain https://mindless-street.surge.sh/
         #need to authenticate surge usage
         env:
           #use => surge whoami => to get email
