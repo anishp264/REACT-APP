@@ -39,4 +39,4 @@ jobs:
         run: npm run build
       - name: Deploy to Surge
         if: github.event_name == 'push'
-        run: npx surge ./build https://mindless-street.surge.sh/ --token 1678041085579
+        run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
