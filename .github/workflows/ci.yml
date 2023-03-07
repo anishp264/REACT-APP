@@ -38,6 +38,6 @@ jobs:
       - name: Install Surge
         if: github.event_name == 'push'
         run: npm install --global surge
-      - name: Deploy Surge
+      - name: Deploy to Surge
         if: github.event_name == 'push'
         run: surge --project ./build --domain https://mindless-street.surge.sh/ --token ${{ secrets.SURGE_TOKEN }}
