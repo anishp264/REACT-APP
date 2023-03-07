@@ -16,9 +16,9 @@ jobs:
         with:
           node-version: 16
           #running npm ci instead of npm install since this is run in a CI env
-      - run: npm ci
-      - run: node -v
+          #- run: npm ci
       - run: npm install -g npm
+      - run: node -v
       - run: npm -v
       - run: npm run format:check
       - run: npm test -- --coverage
