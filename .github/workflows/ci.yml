@@ -20,7 +20,7 @@ jobs:
           #the key, to be generated if os changes and if package-lock.json file (dependencies) changes. the key name here is node
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           #restore key, incase if the cache cannot be found, the restore key could be used
-          restore-key: |
+          restore-keys: |
             #restore key starting with  ${{ runner.os }}-node-
             ${{ runner.os }}-node-
       - name: Use NodeJS
