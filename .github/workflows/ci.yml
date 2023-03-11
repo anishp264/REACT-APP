@@ -11,6 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      #cache node modules before running npm install
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          #path where the cache needs to be stored. Path depends on os and language: refer https://github.com/actions/cache
+          path: ~/.npm
+          #the key, to be generated if os changes and if package-lock.json file (dependencies) changes. the key name here is node
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          #restore key, incase if the cache cannot be found, the restore key could be used
+          restore-key: |
+            #restore key starting with  ${{ runner.os }}-node-
+            ${{ runner.os }}-node-
       - name: Use NodeJS
         uses: actions/setup-node@v3
         with:
@@ -23,8 +35,6 @@ jobs:
         run: node -v
       - name: Check npm version
         run: npm -v
-      - name: check token
-        run: ${{ secrets.SURGE_TOKEN }}
       # Performing automated tests and code formatting
       - name: Perform Code format checks
         run: npm run format:check
