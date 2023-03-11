@@ -43,10 +43,23 @@ jobs:
         #need to set env to CI to prevent any terminals be shown while running test and coverage
         env:
           CI: true
+      - name: Upload Test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          #the coverage statement would be in a folder called coverage as in the project => build/coverage
+          path: coverage
       # Build the project
       - name: Build Project
         if: github.event_name == 'push'
         run: npm run build
+      - name: Upload Build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+      #The below action downloads the artifact
+      #- uses: actions/download-artifact
       - name: Deploy to Surge
         if: github.event_name == 'push'
         run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
