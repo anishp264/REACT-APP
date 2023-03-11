@@ -63,7 +63,7 @@ jobs:
         run: npx semantic-release
         #create a new release due to the usage of github plugin. Authenticate using a github token
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: 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
       #The below action downloads the artifact
       #- uses: actions/download-artifact
       - name: Deploy to Surge
