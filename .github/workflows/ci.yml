@@ -59,7 +59,7 @@ jobs:
           name: build
           path: build
       - name: Check GitHub token
-        run: ${{ secrets.GITHUB_TOKEN }}
+        run: echo ${{ secrets.GITHUB_TOKEN }}
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx semantic-release
