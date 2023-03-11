@@ -1,16 +1,28 @@
 name: CI
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, master]
   #push event triggered when a feature branch is merged with develop
   push:
-    branches: [develop]
+    branches: [develop, master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      #cache node modules before running npm install
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          #path where the cache needs to be stored. Path depends on os and language: refer https://github.com/actions/cache
+          path: ~/.npm
+          #the key, to be generated if os changes and if package-lock.json file (dependencies) changes. the key name here is node
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          #restore key, incase if the cache cannot be found, the restore key could be used
+          restore-keys: |
+            #restore key starting with  ${{ runner.os }}-node-
+            ${{ runner.os }}-node-
       - name: Use NodeJS
         uses: actions/setup-node@v3
         with:
@@ -23,8 +35,6 @@ jobs:
         run: node -v
       - name: Check npm version
         run: npm -v
-      - name: check token
-        run: ${{ secrets.SURGE_TOKEN }}
       # Performing automated tests and code formatting
       - name: Perform Code format checks
         run: npm run format:check
@@ -33,10 +43,29 @@ jobs:
         #need to set env to CI to prevent any terminals be shown while running test and coverage
         env:
           CI: true
+      - name: Upload Test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          #the coverage statement would be in a folder called coverage as in the project => build/coverage
+          path: coverage
       # Build the project
       - name: Build Project
         if: github.event_name == 'push'
         run: npm run build
+      - name: Upload Build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+      - name: Create a Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx semantic-release
+        #create a new release due to the usage of github plugin. Authenticate using a github token
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #The below action downloads the artifact
+      #- uses: actions/download-artifact
       - name: Deploy to Surge
         if: github.event_name == 'push'
         run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
