@@ -79,6 +79,7 @@ jobs:
       - name: Deploy to Production
         if: github.event_name == 'push' && github.ref == 'refs/head/master'
         run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
+      #Uploading coverage reports
       - name: Upload coverage reports
         if: github.event_name == 'push' && github.ref == 'refs/head/master'
         run: npx codecov
