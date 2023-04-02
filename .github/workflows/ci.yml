@@ -58,14 +58,30 @@ jobs:
         with:
           name: build
           path: build
+      - name: ZIP Assets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          # linux command, zipping the folders recursively, ie, gets all the folders and subfolders
+          zip -r build.zip ./build
+          zip -r coverage.zip ./coverage
       - name: Create a Release
+        #refer for workflow permissions: https://dev.to/github/the-githubtoken-in-github-actions-how-it-works-change-permissions-customizations-3cgp
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx semantic-release
         #create a new release due to the usage of github plugin. Authenticate using a github token
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
       #The below action downloads the artifact
       #- uses: actions/download-artifact
-      - name: Deploy to Surge
-        if: github.event_name == 'push'
+      - name: Deploy to Staging
+        if: github.event_name == 'push' && github.ref == 'refs/head/develop'
         run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
+      - name: Deploy to Production
+        if: github.event_name == 'push' && github.ref == 'refs/head/master'
+        run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
+      #Uploading coverage reports
+      - name: Upload coverage reports
+        if: github.event_name == 'push' && github.ref == 'refs/head/master'
+        run: npx codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
