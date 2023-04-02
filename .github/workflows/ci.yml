@@ -73,6 +73,14 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
       #The below action downloads the artifact
       #- uses: actions/download-artifact
-      - name: Deploy to Surge
-        if: github.event_name == 'push'
+      - name: Deploy to Staging
+        if: github.event_name == 'push' && github.ref == 'refs/head/develop'
         run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
+      - name: Deploy to Production
+        if: github.event_name == 'push' && github.ref == 'refs/head/master'
+        run: npx surge ./build https://mindless-street.surge.sh/ --token 780847c1fafc64fd211ead28b1ea00dc
+      - name: Upload coverage reports
+        if: github.event_name == 'push' && github.ref == 'refs/head/master'
+        run: npx codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
