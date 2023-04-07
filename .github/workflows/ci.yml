@@ -70,7 +70,9 @@ jobs:
         run: npx semantic-release
         #create a new release due to the usage of github plugin. Authenticate using a github token
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          #GITHUB_TOKEN: ${{ github.token }}
+          #using custom token instead of github token here to trigger the release workflow
+          GITHUB_TOKEN: ${{ secrets.CUSTOM_TOKEN }}
       #The below action downloads the artifact
       #- uses: actions/download-artifact
       - name: Deploy to Staging
