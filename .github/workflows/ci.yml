@@ -92,7 +92,7 @@ jobs:
         run: |
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/issues \
-          --header 'authorization: Bearer ${{ secrets.CUSTOM_TOKEN }}' \
+          --header 'authorization: Bearer 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' \
           --header 'content-type: application/json' \
           --data '{
             "title": "Automated issue for commit: ${{ github.sha }}",
