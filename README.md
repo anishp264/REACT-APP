@@ -1,5 +1,7 @@
 # Getting Started with Create React App
 
+![](https://github.com/anishp264/REACT-APP/workflows/CI/badge.svg?branch=master&event=push)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
