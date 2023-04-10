@@ -11239,7 +11239,7 @@
       const assignees = core.getInput("assignees");
 
       const octokit = new github.getOctokit(token);
-      const response = octokit.issues.create({
+      const response = octokit.rest.issues.create({
         /*owner: github.context.repo.owner,
         repo: github.context.repo.repo,*/
         //below same as above two lines => javascript es6 spreading the github.context.repo
